@@ -4,26 +4,38 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "USER_DATA")
+@Table(name = "USER_DATA", uniqueConstraints = {@UniqueConstraint(name = "UniqueUserNamePasswordActive",columnNames = {"username","password","active"})})
 @Data
 public class UserData {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
+    @Column(name = "username",nullable = false)
+    @NotBlank(message = "User Name Mandatory")
     private String username;
+    @NotBlank(message = "User Password Mandatory")
+    @Column(name = "password",nullable = false)
     private String password;
-//    @ManyToOne
-//    @JoinColumn(name = "role_id")
-//    @Cascade(org.hibernate.annotations.CascadeType.PERSIST)
+    @Column(name = "role",nullable = false)
+    @NotBlank(message = "User Role Mandatory")
     private String role;
+    @Column(name = "active",nullable = false)
+    @NotNull(message = "User status active Mandatory. Default will be true")
     private boolean active;
+    @NotNull(message = "User status disable Mandatory. Default will be false")
+    @Column(name = "disable", nullable = false)
     private boolean disable;
     @Enumerated(EnumType.STRING)
     private Provider provider;
+    private LocalDateTime createdOn;
+    private LocalDateTime updatedOn;
 }

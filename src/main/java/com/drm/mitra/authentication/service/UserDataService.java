@@ -15,7 +15,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -54,9 +57,16 @@ public class UserDataService implements UserDetailsService {
         }
     }
 
-    public UserData saveUser(UserData userData) {
+    @Transactional
+    public UserData saveUser(UserData userData) throws MethodArgumentNotValidException {
         log.info("Inside saveUser service method");
-        return userDataRepository.save(userData);
+       UserData user_Data = userDataRepository.findByUserName(userData.getUsername());
+       if(user_Data != null) {
+           userData.setId(user_Data.getId());
+       }
+       userData.setCreatedOn(user_Data.getCreatedOn()==null?LocalDateTime.now():user_Data.getCreatedOn());
+       userData.setUpdatedOn(LocalDateTime.now());
+       return userDataRepository.save(userData);
     }
 
     @Override
@@ -76,6 +86,8 @@ public class UserDataService implements UserDetailsService {
             userData.setRole("USER");
             userData.setUsername(userDataModel.getUsername());
             userData.setPassword(userDataModel.getUsername());
+            userData.setCreatedOn(LocalDateTime.now());
+            userData.setUpdatedOn(LocalDateTime.now());
             userDataRepository.save(userData);
             return otpUtility.generateOTP(userData);
         } else {
@@ -99,6 +111,8 @@ public class UserDataService implements UserDetailsService {
             userData.setActive(true);
             userData.setDisable(false);
             userData.setRole("USER");
+            userData.setCreatedOn(LocalDateTime.now());
+            userData.setUpdatedOn(LocalDateTime.now());
             userDataRepository.save(userData);
         }
     }

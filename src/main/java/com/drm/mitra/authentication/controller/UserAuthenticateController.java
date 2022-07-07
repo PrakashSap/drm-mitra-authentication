@@ -18,7 +18,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -87,7 +90,7 @@ public class UserAuthenticateController {
     }
 
     @PostMapping("/save-user")
-    public ResponseEntity<UserData> saveUser(@RequestBody UserData userData) {
+    public ResponseEntity<UserData> saveUser(@Valid @RequestBody UserData userData) throws MethodArgumentNotValidException {
         log.info("Inside saveUser controller method");
         return new ResponseEntity<>(userDataService.saveUser(userData),HttpStatus.CREATED);
     }
