@@ -1,0 +1,23 @@
+
+jwt:
+  security: secretkey123
+
+twilio:
+  accountSId: AC048b959c3c88b7a8de69fe582a25fb09
+  authId: 3fe46a396270c1ab6f04180b8a0a77b0
+  trailNumber: +19706388523
+  serviceId: VAe65303df82dbbea1dcc90821e00884fe
+
+#Google authentication
+# url format:- /oauth2/authorization/google
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 573727090171-j5rg4iuagcaeh6ifr6kj3jcibv19nb98.apps.googleusercontent.com
+            clientSecret: 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
+            scope:
+              - email
+              - profile
