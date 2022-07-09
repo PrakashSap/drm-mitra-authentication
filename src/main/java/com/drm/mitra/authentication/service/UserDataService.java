@@ -1,11 +1,14 @@
 package com.drm.mitra.authentication.service;
 
 import com.drm.mitra.authentication.entity.Provider;
+import com.drm.mitra.authentication.entity.Roles;
 import com.drm.mitra.authentication.entity.UserData;
 import com.drm.mitra.authentication.exception.ResourceNotFoundException;
+import com.drm.mitra.authentication.exception.RoleNameNotEmptyException;
 import com.drm.mitra.authentication.exception.UserNameNotEmptyException;
 import com.drm.mitra.authentication.model.JwtRequest;
 import com.drm.mitra.authentication.model.UserDataModel;
+import com.drm.mitra.authentication.repository.RolesRepository;
 import com.drm.mitra.authentication.repository.UserDataRepository;
 import com.drm.mitra.authentication.utility.OTPUtility;
 import lombok.extern.slf4j.Slf4j;
@@ -29,9 +32,12 @@ public class UserDataService implements UserDetailsService {
 
     private OTPUtility otpUtility;
 
-    public UserDataService(UserDataRepository userDataRepository, OTPUtility otpUtility) {
+    private RolesRepository rolesRepository;
+
+    public UserDataService(UserDataRepository userDataRepository, OTPUtility otpUtility,RolesRepository rolesRepository) {
         this.userDataRepository = userDataRepository;
         this.otpUtility = otpUtility;
+        this.rolesRepository = rolesRepository;
     }
 
     public List<UserData> getAllUsers() throws ResourceNotFoundException {
@@ -64,7 +70,7 @@ public class UserDataService implements UserDetailsService {
        if(user_Data != null) {
            userData.setId(user_Data.getId());
        }
-       userData.setCreatedOn(user_Data.getCreatedOn()==null?LocalDateTime.now():user_Data.getCreatedOn());
+       userData.setCreatedOn(user_Data == null? LocalDateTime.now():user_Data.getCreatedOn());
        userData.setUpdatedOn(LocalDateTime.now());
        return userDataRepository.save(userData);
     }
@@ -115,5 +121,39 @@ public class UserDataService implements UserDetailsService {
             userData.setUpdatedOn(LocalDateTime.now());
             userDataRepository.save(userData);
         }
+    }
+
+    public List<Roles> getAllRoles() throws ResourceNotFoundException {
+        log.info("Inside getAllRoles service method");
+        List<Roles> roles = rolesRepository.findAll();
+        if(roles.isEmpty() || roles == null) {
+            throw new ResourceNotFoundException("No data found");
+        } else {
+            return roles;
+        }
+    }
+
+    public Roles getRolesByName(String rolesName) throws RoleNameNotEmptyException {
+        log.info("Inside getRolesByName service method");
+        if(rolesName == null) {
+            throw new RoleNameNotEmptyException("rolesName Should not be empty or null");
+        }
+        Roles roles = rolesRepository.findByRoleName(rolesName);
+        if(roles == null) {
+            throw new RoleNameNotEmptyException("No such User Found");
+        } else {
+            return roles;
+        }
+    }
+
+    public Roles saveRoles(Roles roles) throws MethodArgumentNotValidException {
+        log.info("Inside saveRoles service method");
+        Roles roles1 = rolesRepository.findByRoleName(roles.getRoleName());
+        if(roles1 != null) {
+            roles.setId(roles.getId());
+        }
+        roles.setCreatedOn(roles1 == null?LocalDateTime.now():roles1.getCreatedOn());
+        roles.setUpdatedOn(LocalDateTime.now());
+        return rolesRepository.save(roles);
     }
 }
