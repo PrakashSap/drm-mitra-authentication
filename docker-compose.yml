@@ -1,0 +1,25 @@
+version: '3.1'
+
+services:
+  app:
+    container_name: drm-mitra-auth
+    image: drm-mitra-auth
+    build: ./
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgresql
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    restart: always
+  postgresql:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres

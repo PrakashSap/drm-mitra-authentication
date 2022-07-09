@@ -1,7 +1,9 @@
 package com.drm.mitra.authentication.controller;
 
+import com.drm.mitra.authentication.entity.Roles;
 import com.drm.mitra.authentication.entity.UserData;
 import com.drm.mitra.authentication.exception.ResourceNotFoundException;
+import com.drm.mitra.authentication.exception.RoleNameNotEmptyException;
 import com.drm.mitra.authentication.exception.UserDataException;
 import com.drm.mitra.authentication.exception.UserNameNotEmptyException;
 import com.drm.mitra.authentication.model.JwtRequest;
@@ -93,5 +95,23 @@ public class UserAuthenticateController {
     public ResponseEntity<UserData> saveUser(@Valid @RequestBody UserData userData) throws MethodArgumentNotValidException {
         log.info("Inside saveUser controller method");
         return new ResponseEntity<>(userDataService.saveUser(userData),HttpStatus.CREATED);
+    }
+
+    @GetMapping("/get-roles-list")
+    public ResponseEntity<List<Roles>> getAllRoles() throws ResourceNotFoundException {
+        log.info("Inside getAllRoles controller method");
+        return new ResponseEntity<>(userDataService.getAllRoles(), HttpStatus.OK);
+    }
+
+    @GetMapping("/get-roles-by-name/{rolesName}")
+    public ResponseEntity<Roles> getRolesByName(@PathVariable("rolesName") String rolesName) throws RoleNameNotEmptyException {
+        log.info("Inside getRolesByName controller method");
+        return new ResponseEntity<>(userDataService.getRolesByName(rolesName),HttpStatus.OK);
+    }
+
+    @PostMapping("/save-role")
+    public ResponseEntity<Roles> saveRoles(@Valid @RequestBody Roles roles) throws MethodArgumentNotValidException {
+        log.info("Inside saveRoles controller method");
+        return new ResponseEntity<>(userDataService.saveRoles(roles),HttpStatus.CREATED);
     }
 }

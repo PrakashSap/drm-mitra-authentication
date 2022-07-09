@@ -8,10 +8,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.annotation.PostConstruct;
 
 @SpringBootApplication
+@EnableWebMvc
 public class DrmMitraAuthenticationApplication {
 
 	@Autowired
