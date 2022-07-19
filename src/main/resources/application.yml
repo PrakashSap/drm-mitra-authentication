@@ -1,6 +1,7 @@
 
-jwt:
-  security: secretkey123
+#jwt:
+#  security: BvPHGM8C0ia4uOuxxqPD5DTbWC9F9TWvPStp3pb7ARo0oK2mJ3pd3YG4lxA9i8bj6OTbadwezxgeEByYK2mJ3pd3YG4lxA9i8bj6OTbadwezxgeEByY
+
 
 twilio:
   accountSId: AC048b959c3c88b7a8de69fe582a25fb09
@@ -11,13 +12,26 @@ twilio:
 #Google authentication
 # url format:- /oauth2/authorization/google
 spring:
+  application:
+    name: USER-AUTH
   security:
     oauth2:
       client:
         registration:
           google:
-            clientId: 573727090171-j5rg4iuagcaeh6ifr6kj3jcibv19nb98.apps.googleusercontent.com
-            clientSecret: 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
+            clientId: 300671420741-emb49ot8nhrrj8fcvrr114fvciprsop4.apps.googleusercontent.com
+            clientSecret: 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
             scope:
               - email
               - profile
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+      instance:
+        hostname: localhost
+
+

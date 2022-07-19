@@ -1,8 +1,11 @@
 package com.drm.mitra.authentication.config;
 
+import com.drm.mitra.authentication.entity.UserData;
+import com.drm.mitra.authentication.exception.UserNameNotEmptyException;
 import com.drm.mitra.authentication.filter.JwtFilter;
 import com.drm.mitra.authentication.service.CustomOAuth2UserService;
 import com.drm.mitra.authentication.service.UserDataService;
+import com.drm.mitra.authentication.utility.JWTUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,8 +16,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +39,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private CustomOAuth2UserService oauthUserService;
+
+    private String homeUrl = "http://localhost:9001/";
+
+    private JWTUtility jwtUtility;
 
     private static final String[] AUTH_WHITELIST = {
             // -- Swagger UI v2
@@ -76,15 +85,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                         .and().oauth2Login().userInfoEndpoint().userService(oauthUserService)
-                        .and().successHandler(new AuthenticationSuccessHandler() {
-                    @Override
-                    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-                        CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
-                        userDataService.processOAuthPostLogin(oauthUser.getEmail());
-                        response.sendRedirect("/get-users-list");
-                    }
-                });
+                        .and().successHandler(successHandler());
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-
     }
+    @Bean
+    public CustomAuthenticationSuccessHandler successHandler() {
+        return new CustomAuthenticationSuccessHandler();
+    }
+
 }

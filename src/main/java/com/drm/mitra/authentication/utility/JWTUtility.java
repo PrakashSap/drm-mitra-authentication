@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import java.io.Serializable;
+import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,10 +20,13 @@ public class JWTUtility implements Serializable {
 
     private static final long serialVersionUID = 234234523523L;
 
-    public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
+//    public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
 
-    @Value("$ {jwt.secret}")
+    @Value("${token.secret}")
     private String secretKey;
+
+    @Value("${token.expiration_time}")
+    public  String JWT_TOKEN_VALIDITY;
 
     //retrieve username from jwt token
     public String getUsernameFromToken(String token) {
@@ -66,7 +70,7 @@ public class JWTUtility implements Serializable {
     //2. Sign the JWT using the HS512 algorithm and secret key.
     private String doGenerateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(JWT_TOKEN_VALIDITY)))
                 .signWith(SignatureAlgorithm.HS512, secretKey).compact();
     }
 
