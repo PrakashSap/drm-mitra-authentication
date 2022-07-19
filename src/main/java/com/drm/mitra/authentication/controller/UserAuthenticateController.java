@@ -28,6 +28,7 @@ import java.util.List;
 
 @RestController
 @Slf4j
+@RequestMapping("/users")
 public class UserAuthenticateController {
 
     private UserDataService userDataService;
@@ -42,7 +43,7 @@ public class UserAuthenticateController {
         this.jwtUtility = jwtUtility;
     }
 
-    @GetMapping("/")
+    @GetMapping("/info")
     public ResponseEntity<Object> getWelcomeMsg() {
         return new ResponseEntity<>("Welcome to DRM MITRA Health Card App", HttpStatus.OK);
     }
