@@ -75,7 +75,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf()
                 .disable()
                 .authorizeRequests()
-//                .antMatchers("/generateOTP","/validateOTP","/oauth/**","/**")
                 .antMatchers("/users/generateOTP","/users/validateOTP","/oauth/**","swagger-ui/index.html#/**","/users/info")
                 .permitAll()
                 .antMatchers(AUTH_WHITELIST).permitAll()

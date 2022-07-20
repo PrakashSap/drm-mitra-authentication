@@ -1,9 +1,11 @@
 package com.drm.mitra.authentication.utility;
 
+import com.drm.mitra.authentication.config.JwtSecretProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -22,11 +24,13 @@ public class JWTUtility implements Serializable {
 
 //    public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
 
-    @Value("${token.secret}")
-    private String secretKey;
+//    @Value("${token.secret}")
+//    private String secretKey;
 
-    @Value("${token.expiration_time}")
-    public  String JWT_TOKEN_VALIDITY;
+//    @Value("${token.expiration_time}")
+//    public  String JWT_TOKEN_VALIDITY;
+    @Autowired
+    private JwtSecretProperties jwtSecretProperties;
 
     //retrieve username from jwt token
     public String getUsernameFromToken(String token) {
@@ -47,7 +51,7 @@ public class JWTUtility implements Serializable {
 
     //for retrieving any information from token we will need the secret key
     private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(jwtSecretProperties.getSecret()).parseClaimsJws(token).getBody();
     }
 
 
@@ -70,8 +74,8 @@ public class JWTUtility implements Serializable {
     //2. Sign the JWT using the HS512 algorithm and secret key.
     private String doGenerateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(JWT_TOKEN_VALIDITY)))
-                .signWith(SignatureAlgorithm.HS512, secretKey).compact();
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(jwtSecretProperties.getExpiration_time())))
+                .signWith(SignatureAlgorithm.HS512, jwtSecretProperties.getSecret()).compact();
     }
 
 
