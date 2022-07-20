@@ -1,10 +1,12 @@
 package com.drm.mitra.authentication;
 
 import com.drm.mitra.authentication.config.ConfigProperties;
+import com.drm.mitra.authentication.config.JwtSecretProperties;
 import com.twilio.Twilio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
@@ -16,6 +18,7 @@ import javax.annotation.PostConstruct;
 @SpringBootApplication
 @EnableWebMvc
 @EnableEurekaClient
+@EnableConfigurationProperties({ConfigProperties.class, JwtSecretProperties.class})
 public class DrmMitraAuthenticationApplication {
 
 	@Autowired
