@@ -76,7 +76,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .disable()
                 .authorizeRequests()
 //                .antMatchers("/generateOTP","/validateOTP","/oauth/**","/**")
-                .antMatchers("/generateOTP","/validateOTP","/oauth/**","swagger-ui/index.html#/**")
+                .antMatchers("/users/generateOTP","/users/validateOTP","/oauth/**","swagger-ui/index.html#/**","/users/info")
                 .permitAll()
                 .antMatchers(AUTH_WHITELIST).permitAll()
                 .anyRequest()

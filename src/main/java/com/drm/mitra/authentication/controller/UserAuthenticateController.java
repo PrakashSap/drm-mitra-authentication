@@ -4,7 +4,6 @@ import com.drm.mitra.authentication.entity.Roles;
 import com.drm.mitra.authentication.entity.UserData;
 import com.drm.mitra.authentication.exception.ResourceNotFoundException;
 import com.drm.mitra.authentication.exception.RoleNameNotEmptyException;
-import com.drm.mitra.authentication.exception.UserDataException;
 import com.drm.mitra.authentication.exception.UserNameNotEmptyException;
 import com.drm.mitra.authentication.model.JwtRequest;
 import com.drm.mitra.authentication.model.JwtResponse;
@@ -19,7 +18,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
