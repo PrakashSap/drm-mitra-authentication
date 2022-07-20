@@ -6,7 +6,7 @@ services:
     image: drm-mitra-auth
     build: ./
     ports:
-      - "8080:8080"
+      - "8080:9001"
     depends_on:
       - postgresql
     environment:
