@@ -15,16 +15,15 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class OTPUtility {
 
-    @Autowired
-    private ConfigProperties configProperties;
-
     private static final String PHONE_NUMBER_PREFIX = "+91";
+    private static final String trailNumber="+19706388523";
+    private static final String serviceId = "VAe65303df82dbbea1dcc90821e00884fe";
 
     public ResponseEntity<Object> generateOTP(UserData userData) throws Exception {
         try {
             log.info("Inside generate otp method OTPUtility class",userData.getPassword(),userData.getUsername());
             Verification verification = Verification.creator(
-                            configProperties.getServiceId(),
+                    serviceId,
                     PHONE_NUMBER_PREFIX+userData.getUsername(), "sms").create();
             System.out.println(verification.getStatus());
             return  new ResponseEntity<>(verification,HttpStatus.OK);
@@ -36,8 +35,7 @@ public class OTPUtility {
     public ResponseEntity<Object> validateOTP(JwtRequest jwtRequest) throws Exception {
         try {
             log.info("Inside validateOTP method OTPUtility class",jwtRequest.getUsername(),jwtRequest.getPassword());
-        VerificationCheck verificationCheck = VerificationCheck.creator(
-                        configProperties.getServiceId(),
+        VerificationCheck verificationCheck = VerificationCheck.creator(serviceId,
                         jwtRequest.getCode())
                 .setTo(PHONE_NUMBER_PREFIX+jwtRequest.getUsername()).create();
         System.out.println(verificationCheck.getStatus());
