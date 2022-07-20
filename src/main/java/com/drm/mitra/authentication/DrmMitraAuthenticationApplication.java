@@ -21,12 +21,12 @@ import javax.annotation.PostConstruct;
 @EnableConfigurationProperties({ConfigProperties.class, JwtSecretProperties.class})
 public class DrmMitraAuthenticationApplication {
 
-	@Autowired
-	private ConfigProperties configProperties;
+	private static final String accountSId="AC048b959c3c88b7a8de69fe582a25fb09";
+	private static final String authId="b080a05e0f1d0a28c0cf6704bcfbfdd9";
 
 	@PostConstruct
 	public void initializeTwilio() {
-		Twilio.init(configProperties.getAccountSId(),configProperties.getAuthId());
+		Twilio.init(accountSId,authId);
 	}
 
 	public static void main(String[] args) {
